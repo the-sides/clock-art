@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Sen&display=swap');
+
+body {
+	position: relative;
+	font-family: 'Sen', sans-serif;
+}
+
+i {
+	display: block;
+	@apply h-[2px] w-4 bg-white m-12;
+	animation: spin 4s linear infinite;
+  /* animation-iteration-count: infinite;
+	animation-timeline: ; */
+}
+
+@keyframes spin {
+    from {
+        transform:rotate(0deg);
+    }
+    to {
+        transform:rotate(360deg);
+    }
+}
