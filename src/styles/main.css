@@ -6,11 +6,21 @@ body {
 }
 
 i {
-	display: block;
-	@apply h-[2px] w-4 bg-white m-12;
+	@apply h-4 py-[7px] w-4 block relative;
+
+    @apply flex-shrink-0;
 	animation: spin 4s linear infinite;
-  /* animation-iteration-count: infinite;
-	animation-timeline: ; */
+}
+
+i::before {
+    content: '';
+    position: absolute;
+    margin: auto;
+    inset: 0;
+    height: 2px;
+    width: 100%;
+    background-color: white;
+    
 }
 
 @keyframes spin {
