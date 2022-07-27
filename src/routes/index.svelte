@@ -1,27 +1,43 @@
 <script>
 	import { onMount } from 'svelte';
 
-	let cells = [];
-	const cellSize = 16;
-	function buildCells() {
-		const perRow = window.innerWidth / cellSize;
-		const perCol = window.innerHeight / cellSize;
-		cells = Array(Math.ceil(perRow * perCol + 5 + perRow));
+	onMount(draw);
+
+	function sizeCanvas(canvas) {
+		canvas.width = window.innerWidth;
+		canvas.height = window.innerHeight;
 	}
-	onMount(() => {
-		buildCells();
-		window.addEventListener('resize', buildCells);
-	});
-	function restartElm(e) {
-		e.target.getAnimations()[0].currentTime = 0;
+
+	function draw() {
+		const canvas = document.getElementById('clock-art');
+		const ctx = canvas.getContext('2d');
+		const time = new Date().getMilliseconds();
+
+		sizeCanvas(canvas);
+
+		ctx.fillStyle = '#fff';
+		ctx.save();
+		
+		ctx.fillRect(0, 7, 16, 2);
+
+		ctx.translate(16, 16)
+		ctx.rotate(-Math.PI / 2);
+		ctx.fillRect(0, 7, 16, 2);
+
+		ctx.restore();
+
+		ctx.translate(32, 16)
+		// ctx.rotate(-Math.PI / 2);
+		ctx.fillRect(0, 7, 16, 2);
+
+		ctx.restore();
+
+		// window.requestAnimationFrame(draw);
+		window.addEventListener('resize', () => sizeCanvas(canvas));
 	}
 </script>
 
 <!-- A <main> is the same as <div>, but more clear -->
 <main class=" relative min-h-screen bg-[#141516] overflow-hidden h-screen w-screen">
-	<section class="flex flex-wrap content-start w-[102vw] h-[102vh]">
-		{#each cells as cell}
-			<i data-value={cell} on:mouseover={restartElm} on:focus />
-		{/each}
-	</section>
+	<canvas id="clock-art" />
 </main>
