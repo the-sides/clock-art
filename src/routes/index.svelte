@@ -10,7 +10,9 @@
 
 	function draw() {
 		const canvas = document.getElementById('clock-art');
-		const ctx = canvas.getContext('2d');
+		if(!canvas) return false;
+		
+		const ctx = canvas?.getContext('2d');
 		const time = new Date().getMilliseconds();
 
 		sizeCanvas(canvas);
@@ -26,11 +28,17 @@
 
 		ctx.restore();
 
-		ctx.translate(32, 16)
-		// ctx.rotate(-Math.PI / 2);
-		ctx.fillRect(0, 7, 16, 2);
 
-		ctx.restore();
+		const cellsX = window.innerWidth / 32;
+		for (let i = 2; i < cellsX; i++) {
+			
+			ctx.translate(i * 16, 0)
+			// ctx.save();
+			// ctx.rotate(-Math.PI / 2);
+			ctx.fillRect(0, 7, 16, 2);
+			ctx.restore();
+		}
+
 
 		// window.requestAnimationFrame(draw);
 		window.addEventListener('resize', () => sizeCanvas(canvas));
