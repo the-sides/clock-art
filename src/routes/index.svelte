@@ -21,7 +21,7 @@
 <main class=" relative min-h-screen bg-[#141516] overflow-hidden h-screen w-screen">
 	<section class="flex flex-wrap content-start w-[102vw] h-[102vh]">
 		{#each cells as cell}
-			<i data-value={cell} on:mouseover={restartElm} on:focus />
+			<i data-value={cell} />
 		{/each}
 	</section>
 </main>
