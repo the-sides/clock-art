@@ -1,27 +1,84 @@
 <script>
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
+	import * as PIXI from 'pixi.js';
 
-	let cells = [];
-	const cellSize = 16;
-	function buildCells() {
-		const perRow = window.innerWidth / cellSize;
-		const perCol = window.innerHeight / cellSize;
-		cells = Array(Math.ceil(perRow * perCol + 5 + perRow));
-	}
+	let app;
+
 	onMount(() => {
-		buildCells();
-		window.addEventListener('resize', buildCells);
+		// The application will create a renderer using WebGL, if possible,
+		// with a fallback to a canvas render. It will also setup the ticker
+		// and the root stage PIXI.Container
+		app = new PIXI.Application({ resizeTo: window, backgroundAlpha: 0, antialias: true });
+
+		// The application will create a canvas element for you that you
+		// can then insert into the DOM
+		document.body.children[0].children[0].appendChild(app.view);
+
+		// load the texture we need
+
+		const lines = [];
+
+		const lineWidth = 16;
+		const lineRadius = lineWidth * 0.5;
+		const minCellsX = Math.ceil(window.innerWidth / lineWidth);
+		const minCellsY = Math.ceil(window.innerHeight / lineWidth);
+
+		for (let i = 0; i < minCellsX; i++) {
+			for (let j = 0; j < minCellsY + 1; j++) {
+				const div = new PIXI.Container();
+				const line = new PIXI.Graphics();
+				const border = new PIXI.Graphics();
+				border.beginFill(0xfff);
+				border.alpha = 0;
+				border.drawRect(0, 0, lineWidth, lineWidth);
+				border.zIndex = 0;
+				// div.hitArea = new PIXI.Rectangle(-lineRadius, -1, lineWidth, lineWidth);
+				// line.hitArea = new PIXI.Rectangle(-lineRadius, -1, lineWidth, lineWidth);
+				// line.fill = 0xffffff;
+				line.beginFill(0xffffff);
+				// draw a rectangle
+				line.drawRect(-lineRadius, -1, lineWidth, 2);
+				line.position.x = 8;
+				line.position.y = 8;
+				div.transform.position.x = i * lineWidth;
+				div.transform.position.y = j * lineWidth;
+				// line.hitArea = new PIXI.Rectangle(-lineRadius, -1, lineWidth, lineWidth);
+
+				div.interactive = true;
+				// line.interactive = true;
+
+				line.on('click', () => {
+					// console.log(e);
+					line.alpha = line.alpha < 1 ? 1 : 0.99;
+				});
+				div.on('mouseover', () => {
+					div.children[0].alpha = 0.5;
+				});
+				div.on('mouseout', () => {
+					div.children[0].alpha = 0;
+				});
+
+				line.zIndex = 1;
+				div.addChild(border, line);
+				lines.push(div);
+			}
+		}
+
+		app.stage.addChild(...lines);
+		// Listen for frame updates
+		const speed = 0.003;
+		app.ticker.add(() => {
+			// each frame we spin the bunny around a bit
+			lines.forEach((line) => {
+				line.children[1].rotation += line.alpha < 1 ? -speed : speed;
+			});
+		});
+		
 	});
-	function restartElm(e) {
-		e.target.getAnimations()[0].currentTime = 0;
-	}
+	onDestroy(() => {
+		app?.destroy()
+	})
 </script>
 
 <!-- A <main> is the same as <div>, but more clear -->
-<main class=" relative min-h-screen bg-[#141516] overflow-hidden h-screen w-screen">
-	<section class="flex flex-wrap content-start w-[102vw] h-[102vh]">
-		{#each cells as cell}
-			<i data-value={cell} />
-		{/each}
-	</section>
-</main>
+<main class=" relative min-h-screen bg-[#141516] overflow-hidden h-screen w-screen" />
