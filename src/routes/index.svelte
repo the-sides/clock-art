@@ -1,51 +1,84 @@
 <script>
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
+	import * as PIXI from 'pixi.js';
 
-	onMount(draw);
+	let app;
 
-	function sizeCanvas(canvas) {
-		canvas.width = window.innerWidth;
-		canvas.height = window.innerHeight;
-	}
+	onMount(() => {
+		// The application will create a renderer using WebGL, if possible,
+		// with a fallback to a canvas render. It will also setup the ticker
+		// and the root stage PIXI.Container
+		app = new PIXI.Application({ resizeTo: window, backgroundAlpha: 0, antialias: true });
 
-	function draw() {
-		const canvas = document.getElementById('clock-art');
-		if(!canvas) return false;
-		
-		const ctx = canvas?.getContext('2d');
-		const time = new Date().getMilliseconds();
+		// The application will create a canvas element for you that you
+		// can then insert into the DOM
+		document.body.children[0].children[0].appendChild(app.view);
 
-		sizeCanvas(canvas);
+		// load the texture we need
 
-		ctx.fillStyle = '#fff';
-		ctx.save();
-		
-		ctx.fillRect(0, 7, 16, 2);
+		const lines = [];
 
-		ctx.translate(16, 16)
-		ctx.rotate(-Math.PI / 2);
-		ctx.fillRect(0, 7, 16, 2);
+		const lineWidth = 16;
+		const lineRadius = lineWidth * 0.5;
+		const minCellsX = Math.ceil(window.innerWidth / lineWidth);
+		const minCellsY = Math.ceil(window.innerHeight / lineWidth);
 
-		ctx.restore();
+		for (let i = 0; i < minCellsX; i++) {
+			for (let j = 0; j < minCellsY + 1; j++) {
+				const div = new PIXI.Container();
+				const line = new PIXI.Graphics();
+				const border = new PIXI.Graphics();
+				border.beginFill(0xfff);
+				border.alpha = 0;
+				border.drawRect(0, 0, lineWidth, lineWidth);
+				border.zIndex = 0;
+				// div.hitArea = new PIXI.Rectangle(-lineRadius, -1, lineWidth, lineWidth);
+				// line.hitArea = new PIXI.Rectangle(-lineRadius, -1, lineWidth, lineWidth);
+				// line.fill = 0xffffff;
+				line.beginFill(0xffffff);
+				// draw a rectangle
+				line.drawRect(-lineRadius, -1, lineWidth, 2);
+				line.position.x = 8;
+				line.position.y = 8;
+				div.transform.position.x = i * lineWidth;
+				div.transform.position.y = j * lineWidth;
+				// line.hitArea = new PIXI.Rectangle(-lineRadius, -1, lineWidth, lineWidth);
 
+				div.interactive = true;
+				// line.interactive = true;
 
-		const cellsX = window.innerWidth / 32;
-		for (let i = 2; i < cellsX; i++) {
-			
-			ctx.translate(i * 16, 0)
-			// ctx.save();
-			// ctx.rotate(-Math.PI / 2);
-			ctx.fillRect(0, 7, 16, 2);
-			ctx.restore();
+				line.on('click', () => {
+					// console.log(e);
+					line.alpha = line.alpha < 1 ? 1 : 0.99;
+				});
+				div.on('mouseover', () => {
+					div.children[0].alpha = 0.5;
+				});
+				div.on('mouseout', () => {
+					div.children[0].alpha = 0;
+				});
+
+				line.zIndex = 1;
+				div.addChild(border, line);
+				lines.push(div);
+			}
 		}
 
-
-		// window.requestAnimationFrame(draw);
-		window.addEventListener('resize', () => sizeCanvas(canvas));
-	}
+		app.stage.addChild(...lines);
+		// Listen for frame updates
+		const speed = 0.003;
+		app.ticker.add(() => {
+			// each frame we spin the bunny around a bit
+			lines.forEach((line) => {
+				line.children[1].rotation += line.alpha < 1 ? -speed : speed;
+			});
+		});
+		
+	});
+	onDestroy(() => {
+		app?.destroy()
+	})
 </script>
 
 <!-- A <main> is the same as <div>, but more clear -->
-<main class=" relative min-h-screen bg-[#141516] overflow-hidden h-screen w-screen">
-	<canvas id="clock-art" />
-</main>
+<main class=" relative min-h-screen bg-[#141516] overflow-hidden h-screen w-screen" />
