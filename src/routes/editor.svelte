@@ -13,7 +13,10 @@
 		// The application will create a canvas element for you that you
 		// can then insert into the DOM
 		//   great, i know...
-		document.body.children[0].children[0].appendChild(app.view);
+		// document.body.children[0].children[0]
+		const entryElm = document.querySelector('.editor-stage')
+
+		entryElm?.appendChild(app.view);
 
 		const lines = [];
 
@@ -77,4 +80,7 @@
 </script>
 
 <!-- A <main> is the same as <div>, but more clear -->
-<main class=" relative min-h-screen bg-[#141516] overflow-hidden h-screen w-screen" />
+<main class="editor-stage relative min-h-screen bg-[#141516] overflow-hidden h-screen w-screen" >
+
+</main>
+
