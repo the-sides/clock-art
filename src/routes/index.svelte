@@ -12,9 +12,8 @@
 
 		// The application will create a canvas element for you that you
 		// can then insert into the DOM
+		//   great, i know...
 		document.body.children[0].children[0].appendChild(app.view);
-
-		// load the texture we need
 
 		const lines = [];
 
@@ -45,11 +44,9 @@
 				// line.hitArea = new PIXI.Rectangle(-lineRadius, -1, lineWidth, lineWidth);
 
 				div.interactive = true;
-				// line.interactive = true;
 
-				line.on('click', () => {
-					// console.log(e);
-					line.alpha = line.alpha < 1 ? 1 : 0.99;
+				div.on('click', (e) => {
+					div.children[1].alpha = 0.5;
 				});
 				div.on('mouseover', () => {
 					div.children[0].alpha = 0.5;
@@ -69,15 +66,14 @@
 		const speed = 0.003;
 		app.ticker.add(() => {
 			// each frame we spin the bunny around a bit
-			lines.forEach((line) => {
-				line.children[1].rotation += line.alpha < 1 ? -speed : speed;
+			lines.forEach((line) => { 
+				line.children[1].rotation += speed;
 			});
 		});
-		
 	});
 	onDestroy(() => {
-		app?.destroy()
-	})
+		app?.destroy();
+	});
 </script>
 
 <!-- A <main> is the same as <div>, but more clear -->
