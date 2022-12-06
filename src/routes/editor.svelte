@@ -14,7 +14,7 @@
 		// can then insert into the DOM
 		//   great, i know...
 		// document.body.children[0].children[0]
-		const entryElm = document.querySelector('.editor-stage')
+		const entryElm = document.querySelector('.editor-stage');
 
 		entryElm?.appendChild(app.view);
 
@@ -53,6 +53,7 @@
 				});
 				div.on('mouseover', () => {
 					div.children[0].alpha = 0.5;
+					div.children[1].rotation = 0;
 				});
 				div.on('mouseout', () => {
 					div.children[0].alpha = 0;
@@ -69,7 +70,7 @@
 		const speed = 0.003;
 		app.ticker.add(() => {
 			// each frame we spin the bunny around a bit
-			lines.forEach((line) => { 
+			lines.forEach((line) => {
 				line.children[1].rotation += speed;
 			});
 		});
@@ -80,7 +81,4 @@
 </script>
 
 <!-- A <main> is the same as <div>, but more clear -->
-<main class="editor-stage relative min-h-screen bg-[#141516] overflow-hidden h-screen w-screen" >
-
-</main>
-
+<main class="editor-stage relative  bg-[#141516] w-screen flex-1" />

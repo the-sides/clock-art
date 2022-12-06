@@ -3,6 +3,12 @@
 body {
 	position: relative;
 	font-family: 'Sen', sans-serif;
+    background-color: #181a1b;
+    color: #e8e6e3;
+    display: flex;
+    flex-direction: column;
+    height: 90vh;
+    justify-content: flex-start;
 }
 
 i {

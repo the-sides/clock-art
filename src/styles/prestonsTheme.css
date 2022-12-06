@@ -1,10 +1,10 @@
 a {
-    color: mediumblue;
+    color: rgb(81, 144, 255);
 }
 
 a:hover,
 a:focus {
-    color: blue;
+    color: rgb(51, 125, 255);
 }
 
 h1,
@@ -15,7 +15,6 @@ h5,
 h6 {
     font-family: 'Raleway', 'Open Sans', 'Source Sans Pro', Roboto, 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', 'Myriad Pro', 'Segoe UI', Myriad, Helvetica, 'Lucida Grande', 'DejaVu Sans Condensed', 'Liberation Sans', 'Nimbus Sans L', Tahoma, Geneva, Arial, sans-serif !important;
     font-weight: 900;
-    color: #111;
     text-shadow: none;
 }
 
