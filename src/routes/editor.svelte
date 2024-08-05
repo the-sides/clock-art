@@ -38,6 +38,8 @@
 				// line.hitArea = new PIXI.Rectangle(-lineRadius, -1, lineWidth, lineWidth);
 				// line.fill = 0xffffff;
 				line.beginFill(0xffffff);
+				line.alpha = 0.2
+				line.rotation = (i+j)/ Math.PI;
 				// draw a rectangle
 				line.drawRect(-lineRadius, -1, lineWidth, 2);
 				line.position.x = 8;
@@ -53,7 +55,7 @@
 				});
 				div.on('mouseover', () => {
 					div.children[0].alpha = 0.5;
-					div.children[1].rotation = 0;
+					// div.children[1].rotation += 0.5;
 				});
 				div.on('mouseout', () => {
 					div.children[0].alpha = 0;
@@ -71,6 +73,7 @@
 		app.ticker.add(() => {
 			// each frame we spin the bunny around a bit
 			lines.forEach((line) => {
+				line.children[1].alpha = Math.min( (line.children[1].rotation * 0.025) % 1, 1 -( (line.children[1].rotation * 0.025) % 1))
 				line.children[1].rotation += speed;
 			});
 		});
@@ -81,4 +84,4 @@
 </script>
 
 <!-- A <main> is the same as <div>, but more clear -->
-<main class="editor-stage relative  bg-[#141516] w-screen flex-1" />
+<main class="editor-stage fixed  h-screen pointer-events-none w-screen flex-1" />
